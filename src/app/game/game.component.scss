@@ -1,0 +1,68 @@
+@mixin box-shadow($params...) {
+	-webkit-box-shadow: $params;
+	-moz-box-shadow: $params;
+	box-shadow: $params;
+}
+
+$cellSize: 25px;
+$cellColor: rgb(191, 192, 187);
+$borderDarkColor: rgb(122, 122, 122);
+table.mineField {
+	background-color: $cellColor;
+	border-collapse: collapse;
+	border: 2px solid $borderDarkColor;
+	&.gameover {
+		pointer-events: none;
+		cursor: default;
+	}
+	tr {
+		td {
+			* { pointer-events: none; }
+
+			border: 1px solid $cellColor;
+
+			border-top-color: rgb(255, 250, 254);
+			border-left-color: rgb(255, 250, 254);
+			border-bottom-color: rgb(121, 124, 117);
+			border-right-color: rgb(121, 124, 117);
+
+			padding: 0;
+
+			cursor: pointer;
+			
+			.content {
+				display: block;
+				width: $cellSize;
+				height: $cellSize;
+				line-height: $cellSize;
+				text-align: center;
+				.number {
+					font-family: 'Orbitron', sans-serif;
+					&.one { color: blue; }
+					&.two { color: green; }
+					&.three { color: red; }
+					&.four { color: darkblue; }
+					&.five { color: maroon; }
+					&.six { color: cadetblue; }
+					&.seven { color: black; }
+					&.eight { color: darkgray; }
+				}
+			}
+
+			&:not(.revealed) {
+				.content {
+					background-image: url(/assets/square.png);
+				}
+			}
+
+			&.revealed {
+				cursor: default;
+				pointer-events: none;
+				border: 1px solid $borderDarkColor;
+				&.mine {
+					background-color: red;
+				}
+			}
+		}
+	}
+}

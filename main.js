@@ -1,19 +1,35 @@
+// ./main.js
 const { app, BrowserWindow } = require('electron')
-let win;
-function createWindow() {
-	win = new BrowserWindow({
-		width: 600,
-		height: 600,
-		backgroundColor: '#ffffff',
-		icon: `file://${__dirname}/dist/assets/logo.png`
+const path = require('path');
+const url = require('url');
+
+require('dotenv').config();
+try {
+	require('electron-reload')(__dirname, {
+		electron: require('electron-prebuilt')
 	});
+} catch (error) { }
 
-	win.loadURL(`file://${__dirname}/dist/index.html`)
+let win = null;
 
-	// win.webContents.openDevTools()
+function createWindow() {
+	win = new BrowserWindow({ width: 1000, height: 600 });
+
+
+	if (process.env.PACKAGE === 'true') {
+		win.loadURL(url.format({
+			pathname: path.join(__dirname, 'dist', 'index.html'),
+			protocol: 'file:',
+			slashes: true
+		}));
+		win.setMenu(null);
+	} else {
+		win.loadURL(process.env.HOST);
+		win.webContents.openDevTools();
+	}
 
 	win.on('closed', function () {
-		win = null
+		win = null;
 	});
 }
 
