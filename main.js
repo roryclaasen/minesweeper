@@ -3,27 +3,30 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path');
 const url = require('url');
 
-require('dotenv').config();
-try {
+var serve;
+const args = process.argv.slice(1);
+serve = args.some(val => val === '--serve');
+
+if (serve) {
 	require('electron-reload')(__dirname, {
 		electron: require('electron-prebuilt')
 	});
-} catch (error) { }
+}
 
-let win = null;
+var win = null;
 
 function createWindow() {
-	win = new BrowserWindow({ width: 1000, height: 600 });
-	win.setMenu(null);
+	win = new BrowserWindow({ width: 1000, height: 650 });
 
-	if (process.env.PACKAGE === 'true') {
+	if (!serve) {
+		win.setMenu(null);
 		win.loadURL(url.format({
 			pathname: path.join(__dirname, 'dist', 'index.html'),
 			protocol: 'file:',
 			slashes: true
 		}));
 	} else {
-		win.loadURL(process.env.HOST);
+		win.loadURL('http://localhost:4200');
 		win.webContents.openDevTools();
 	}
 
@@ -32,12 +35,17 @@ function createWindow() {
 	});
 }
 
-app.on('ready', createWindow);
 
-app.on('window-all-closed', function () {
-	if (process.platform !== 'darwin') app.quit();
-});
+try {
+	app.on('ready', createWindow);
 
-app.on('activate', function () {
-	if (win === null) createWindow();
-});
+	app.on('window-all-closed', function () {
+		if (process.platform !== 'darwin') app.quit();
+	});
+
+	app.on('activate', function () {
+		if (win === null) createWindow();
+	});
+} catch (e) { 
+	throw e;
+}

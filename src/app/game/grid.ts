@@ -4,35 +4,54 @@ export class MineField {
 
 	private _table: FieldCell[][];
 
-	constructor(width: number, height: number, mines: number) {
+	constructor(width: number, height: number, mines: number, placeX?: number, placeY?: number) {
 		this._width = width;
 		this._height = height;
 
 		this._table = [];
+		const dummy = new FieldCell(CellType.DUMMY);
+		dummy.onReveal = (y, x) => {
+			this.generate(mines, y, x, () => {
+				this._table[y][x].reveal();
+			});
+		};
+
 		for (let y = 0; y < height; y++) {
 			this._table[y] = new Array<FieldCell>(width);
+			for (let x = 0; x < width; x++) {
+				this._table[y][x] = dummy;
+			}
+		}
+	}
+
+	generate(mines: number, placeX?: number, placeY?: number, callback?: any): void {
+		this._table = [];
+		for (let y = 0; y < this._height; y++) {
+			this._table[y] = new Array<FieldCell>(this._width);
 		}
 
+		mines = Math.min(mines, this._width * this._height);
+
 		for (let m = 0; m < mines; m++) {
-			let y: number = Math.floor(Math.random() * height);
-			let x: number = Math.floor(Math.random() * width);
-			while (this._table[y][x] !== undefined) {
-				y = Math.floor(Math.random() * height);
-				x = Math.floor(Math.random() * width);
+			let y: number = Math.floor(Math.random() * this._height);
+			let x: number = Math.floor(Math.random() * this._width);
+			while (this._table[y][x] !== undefined && x !== placeX && y !== placeY) {
+				y = Math.floor(Math.random() * this._height);
+				x = Math.floor(Math.random() * this._width);
 			}
 			this._table[y][x] = new FieldCell(CellType.MINE);
 		}
 
-		for (let y = 0; y < height; y++) {
-			for (let x = 0; x < width; x++) {
+		for (let y = 0; y < this._height; y++) {
+			for (let x = 0; x < this._width; x++) {
 				let count = 0;
 				if (this._table[y][x] !== undefined) {
 					continue;
 				}
 				for (let yI = -1; yI <= 1; yI++) {
-					if (y + yI < 0 || y + yI >= height) { continue; }
+					if (y + yI < 0 || y + yI >= this._height) { continue; }
 					for (let xI = -1; xI <= 1; xI++) {
-						if (x + xI < 0 || x + xI >= width) { continue; }
+						if (x + xI < 0 || x + xI >= this._width) { continue; }
 						if (yI === y && xI === x) {
 							continue;
 						}
@@ -50,6 +69,9 @@ export class MineField {
 					this._table[y][x] = new FieldCell(CellType.NUMBER, count);
 				}
 			}
+		}
+		if (callback) {
+			callback();
 		}
 	}
 
@@ -72,6 +94,8 @@ export class FieldCell {
 	private _flag: Boolean;
 	private _revealed: Boolean;
 
+	private _onReveal: any;
+
 	constructor(type: CellType, number?: number) {
 		this._type = type;
 		this._number = number;
@@ -83,10 +107,19 @@ export class FieldCell {
 		return this._number;
 	}
 
-	reveal(): void {
-		this._revealed = true;
-		if (this._flag) {
-			this._flag = false;
+	set onReveal(func: any) {
+		this._onReveal = func;
+	}
+
+	reveal(y?: number, x?: number): void {
+		if (this._type !== CellType.DUMMY) {
+			this._revealed = true;
+			if (this._flag) {
+				this._flag = false;
+			}
+		}
+		if (this._onReveal) {
+			this._onReveal(y, x);
 		}
 	}
 
@@ -112,5 +145,5 @@ export class FieldCell {
 }
 
 export enum CellType {
-	NONE, NUMBER, MINE
+	NONE, NUMBER, MINE, DUMMY
 }

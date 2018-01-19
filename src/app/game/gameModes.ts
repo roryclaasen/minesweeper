@@ -7,22 +7,24 @@ export class GameModeManager {
 
 	constructor() {
 		this._list = new Array<GameMode>();
-		this._list[0] = new GameMode(9, 9, 16, GameModeType.defined, 'Easy (9x9)');
-		this._list[1] = new GameMode(16, 16, 18, GameModeType.defined, 'Medium (16x16)');
-		this._list[2] = new GameMode(32, 32, 20, GameModeType.defined, 'Hard (32x32)');
-		this._custom = new GameMode(16, 16, 16, GameModeType.custom, 'Custom');
+		this._list[0] = new GameMode(9, 9, 42, GameModeType.defined, 'Easy (9x9)');
+		this._list[1] = new GameMode(16, 16, 95, GameModeType.defined, 'Medium (16x16)');
+		this._list[2] = new GameMode(24, 30, 225, GameModeType.defined, 'Hard (24x30)');
+		this._custom = new GameMode(30, 16, 161, GameModeType.custom, 'Custom');
+
+		this._current = 1;
 	}
 
-	setCurrentMode(index: number) {
+	set current(index: number) {
 		this._current = index;
 	}
 
-	get currentNumber(): number {
+	get current(): number {
 		return this._current;
 	}
 
 	get currentMode(): GameMode {
-		if (this._current === -1) {
+		if (this.isCustomMode) {
 			return this._custom;
 		}
 		return this._list[this._current];
@@ -34,6 +36,10 @@ export class GameModeManager {
 
 	get customMode(): GameMode {
 		return this._custom;
+	}
+
+	get isCustomMode(): Boolean {
+		return this._current === -1;
 	}
 }
 

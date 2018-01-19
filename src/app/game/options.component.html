@@ -5,12 +5,12 @@
 				Game Options
 			</mat-panel-title>
 			<mat-panel-description>
-				{{ currentMode.text }}
+				{{ gameModes.currentMode.desc }}
 			</mat-panel-description>
 		</mat-expansion-panel-header>
 
 		<mat-form-field>
-			<mat-select [(value)]="selectedMode">
+			<mat-select [(value)]="gameModes.current">
 				<mat-option [value]="-1">{{ gameModes.customMode.desc }}</mat-option>
 				<mat-option *ngFor="let mode of gameModes.list; let itrr = index" [value]="itrr">{{ mode.desc }}</mat-option>
 			</mat-select>
@@ -20,13 +20,13 @@
 
 		<div style="padding-top: 10px;">
 			<mat-form-field>
-				<input matInput type="number" placeholder="Width" [value]="gameModes.customMode.width" [disabled]="isModeDefined">
+				<input matInput type="number" placeholder="Width" [(ngModel)]="gameModes.customMode.width" [disabled]="!gameModes.isCustomMode">
 			</mat-form-field>
 			<mat-form-field>
-				<input matInput type="number" placeholder="Height" [value]="gameModes.customMode.height" [disabled]="isModeDefined">
+				<input matInput type="number" placeholder="Height" [(ngModel)]="gameModes.customMode.height" [disabled]="!gameModes.isCustomMode">
 			</mat-form-field>
 			<mat-form-field>
-				<input matInput type="number" placeholder="Mines" [value]="gameModes.customMode.mines" [disabled]="isModeDefined">
+				<input matInput type="number" placeholder="Mines" [(ngModel)]="gameModes.customMode.mines" [disabled]="!gameModes.isCustomMode">
 			</mat-form-field>
 		</div>
 	</mat-expansion-panel>

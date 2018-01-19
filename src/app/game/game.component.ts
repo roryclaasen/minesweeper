@@ -14,16 +14,12 @@ export class GameComponent implements OnInit {
 	private mineField: MineField;
 
 	private died: Boolean = false;
-
 	private currentGameOptions: any;
 
 	gameModes: GameModeManager;
 
 	ngOnInit(): void {
 		this.gameModes = new GameModeManager();
-	}
-
-	constructor() {
 		this.newGame();
 	}
 
@@ -36,6 +32,7 @@ export class GameComponent implements OnInit {
 		const width = this.gameModes.currentMode.width;
 		const height = this.gameModes.currentMode.height;
 		const mines = this.gameModes.currentMode.mines;
+
 		this.mineField = new MineField(width, height, mines);
 	}
 
@@ -43,7 +40,7 @@ export class GameComponent implements OnInit {
 		event.preventDefault();
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
-			if (!this.mineField.table[y][x].revealed) {
+			if (!this.mineField.table[y][x].revealed && this.mineField.table[y][x].type !== CellType.DUMMY) {
 				this.mineField.table[y][x].toggleFlag();
 			}
 		}
@@ -55,7 +52,7 @@ export class GameComponent implements OnInit {
 			if (this.mineField.table[y][x].hasFlag) {
 				this.mineField.table[y][x].toggleFlag();
 			} else {
-				this.mineField.table[y][x].reveal();
+				this.mineField.table[y][x].reveal(y, x);
 				if (this.mineField.table[y][x].type === CellType.NONE) {
 					this.revealEmpty(y, x);
 				}
