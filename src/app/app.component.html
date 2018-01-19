@@ -1,8 +1,9 @@
 <mat-toolbar color="primary">
-	<mat-toolbar-row>
-		<span>{{ title }}</span>
-		<button mat-button>Basic</button>
-	</mat-toolbar-row>
+	<button mat-button><i class="fa fa-bomb" style="margin-right: 5px;"></i>{{ title }}</button>
+	<span class="spacer"></span>
+	<button mat-button (click)="openGithub()">Github</button>
 </mat-toolbar>
 
-<app-game></app-game>
+<div class="container">
+	<app-game></app-game>
+</div>

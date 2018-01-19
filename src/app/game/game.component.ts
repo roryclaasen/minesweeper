@@ -1,25 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 
 import { MineField, CellType } from './grid';
+
+import { GameModeManager } from './gameModes';
 
 @Component({
 	selector: 'app-game',
 	templateUrl: './game.component.html',
 	styleUrls: ['./game.component.scss']
 })
-export class GameComponent {
+export class GameComponent implements OnInit {
 
 	private mineField: MineField;
 
 	private died: Boolean = false;
 
+	private currentGameOptions: any;
+
+	gameModes: GameModeManager;
+
+	ngOnInit(): void {
+		this.gameModes = new GameModeManager();
+	}
+
 	constructor() {
 		this.newGame();
 	}
 
+	gameOptionsChanged(options: any): void {
+		this.currentGameOptions = options;
+	}
+
 	newGame(): void {
 		this.died = false;
-		this.mineField = new MineField(12, 12, 16);
+		const width = this.gameModes.currentMode.width;
+		const height = this.gameModes.currentMode.height;
+		const mines = this.gameModes.currentMode.mines;
+		this.mineField = new MineField(width, height, mines);
 	}
 
 	rightClick(event: any): void {
@@ -72,7 +89,7 @@ export class GameComponent {
 
 	convertNumber(value: number): String {
 		switch (value) {
-			case(1): {
+			case (1): {
 				return 'one';
 			}
 			case (2): {

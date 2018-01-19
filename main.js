@@ -14,7 +14,7 @@ let win = null;
 
 function createWindow() {
 	win = new BrowserWindow({ width: 1000, height: 600 });
-
+	win.setMenu(null);
 
 	if (process.env.PACKAGE === 'true') {
 		win.loadURL(url.format({
@@ -22,7 +22,6 @@ function createWindow() {
 			protocol: 'file:',
 			slashes: true
 		}));
-		win.setMenu(null);
 	} else {
 		win.loadURL(process.env.HOST);
 		win.webContents.openDevTools();

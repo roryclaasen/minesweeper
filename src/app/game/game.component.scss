@@ -4,6 +4,10 @@
 	box-shadow: $params;
 }
 
+mat-card {
+	margin: 20px 0;
+}
+
 $cellSize: 25px;
 $cellColor: rgb(191, 192, 187);
 $borderDarkColor: rgb(122, 122, 122);
@@ -11,6 +15,7 @@ table.mineField {
 	background-color: $cellColor;
 	border-collapse: collapse;
 	border: 2px solid $borderDarkColor;
+	margin: auto;
 	&.gameover {
 		pointer-events: none;
 		cursor: default;

@@ -1,0 +1,33 @@
+<mat-accordion>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Game Options
+			</mat-panel-title>
+			<mat-panel-description>
+				{{ currentMode.text }}
+			</mat-panel-description>
+		</mat-expansion-panel-header>
+
+		<mat-form-field>
+			<mat-select [(value)]="selectedMode">
+				<mat-option [value]="-1">{{ gameModes.customMode.desc }}</mat-option>
+				<mat-option *ngFor="let mode of gameModes.list; let itrr = index" [value]="itrr">{{ mode.desc }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-divider></mat-divider>
+
+		<div style="padding-top: 10px;">
+			<mat-form-field>
+				<input matInput type="number" placeholder="Width" [value]="gameModes.customMode.width" [disabled]="isModeDefined">
+			</mat-form-field>
+			<mat-form-field>
+				<input matInput type="number" placeholder="Height" [value]="gameModes.customMode.height" [disabled]="isModeDefined">
+			</mat-form-field>
+			<mat-form-field>
+				<input matInput type="number" placeholder="Mines" [value]="gameModes.customMode.mines" [disabled]="isModeDefined">
+			</mat-form-field>
+		</div>
+	</mat-expansion-panel>
+</mat-accordion>

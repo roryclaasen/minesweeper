@@ -85,6 +85,9 @@ export class FieldCell {
 
 	reveal(): void {
 		this._revealed = true;
+		if (this._flag) {
+			this._flag = false;
+		}
 	}
 
 	get revealed(): Boolean {
