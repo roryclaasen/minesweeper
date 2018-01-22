@@ -40,7 +40,7 @@ export class GameComponent implements OnInit {
 		event.preventDefault();
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
-			if (!this.mineField.table[y][x].revealed && this.mineField.table[y][x].type !== CellType.DUMMY) {
+			if (!this.mineField.table[y][x].revealed && !this.mineField.table[y][x].isDummy) {
 				this.mineField.table[y][x].toggleFlag();
 			}
 		}
@@ -49,6 +49,9 @@ export class GameComponent implements OnInit {
 	click(event: any): void {
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
+			if (this.mineField.table[y][x].isDummy) {
+				this.mineField.generate(y, x);
+			}
 			if (this.mineField.table[y][x].hasFlag) {
 				this.mineField.table[y][x].toggleFlag();
 			} else {
@@ -63,6 +66,14 @@ export class GameComponent implements OnInit {
 		}
 	}
 
+	revealAll(): void {
+		for (let y = 0; y < this.mineField.height; y++) {
+			for (let x = 0; x < this.mineField.width; x++) {
+				this.mineField.table[y][x].reveal(y, x);
+			}
+		}
+	}
+
 	private revealEmpty(startY: number, startX: number) {
 		for (let yI = -1; yI <= 1; yI++) {
 			const y = startY + yI;
@@ -72,9 +83,11 @@ export class GameComponent implements OnInit {
 				const x = startX + xI;
 				if (x < 0 || x >= this.mineField.width) { continue; }
 				if (y === startY && x === startX) { continue; }
-				if (this.mineField.table[y][x].type === CellType.NONE && !this.mineField.table[y][x].revealed) {
+				if (!this.mineField.table[y][x].revealed) {
 					this.mineField.table[y][x].reveal();
-					this.revealEmpty(y, x);
+					if (this.mineField.table[y][x].type === CellType.NONE) {
+						this.revealEmpty(y, x);
+					}
 				}
 			}
 		}

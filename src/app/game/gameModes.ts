@@ -7,10 +7,10 @@ export class GameModeManager {
 
 	constructor() {
 		this._list = new Array<GameMode>();
-		this._list[0] = new GameMode(9, 9, 42, GameModeType.defined, 'Easy (9x9)');
-		this._list[1] = new GameMode(16, 16, 95, GameModeType.defined, 'Medium (16x16)');
-		this._list[2] = new GameMode(24, 30, 225, GameModeType.defined, 'Hard (24x30)');
-		this._custom = new GameMode(30, 16, 161, GameModeType.custom, 'Custom');
+		this._list[0] = new GameMode(9, 9, 10, GameModeType.defined, 'Easy');
+		this._list[1] = new GameMode(16, 16, 40, GameModeType.defined, 'Medium');
+		this._list[2] = new GameMode(24, 30, 100, GameModeType.defined, 'Hard');
+		this._custom = new GameMode(30, 16, 150, GameModeType.custom, 'Custom');
 
 		this._current = 1;
 	}
@@ -85,6 +85,10 @@ export class GameMode {
 
 	get type(): GameModeType {
 		return this._type;
+	}
+
+	get descSize(): String {
+		return this._desc + ' (' + this._width + 'x' + this._height + ')';
 	}
 
 	get desc(): String {

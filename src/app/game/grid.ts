@@ -1,20 +1,17 @@
 export class MineField {
 	private _width: number;
 	private _height: number;
+	private _mines: number;
 
 	private _table: FieldCell[][];
 
 	constructor(width: number, height: number, mines: number, placeX?: number, placeY?: number) {
 		this._width = width;
 		this._height = height;
+		this._mines = Math.min(mines, width * height);
 
 		this._table = [];
 		const dummy = new FieldCell(CellType.DUMMY);
-		dummy.onReveal = (y, x) => {
-			this.generate(mines, y, x, () => {
-				this._table[y][x].reveal();
-			});
-		};
 
 		for (let y = 0; y < height; y++) {
 			this._table[y] = new Array<FieldCell>(width);
@@ -24,18 +21,16 @@ export class MineField {
 		}
 	}
 
-	generate(mines: number, placeX?: number, placeY?: number, callback?: any): void {
+	generate(placeY?: number, placeX?: number): void {
 		this._table = [];
 		for (let y = 0; y < this._height; y++) {
 			this._table[y] = new Array<FieldCell>(this._width);
 		}
+		for (let m = 0; m < this._mines; m++) {
+			let y: number = placeY;
+			let x: number = placeX;
 
-		mines = Math.min(mines, this._width * this._height);
-
-		for (let m = 0; m < mines; m++) {
-			let y: number = Math.floor(Math.random() * this._height);
-			let x: number = Math.floor(Math.random() * this._width);
-			while (this._table[y][x] !== undefined && x !== placeX && y !== placeY) {
+			while ((y === placeY && x === placeX) || this._table[y][x] !== undefined) {
 				y = Math.floor(Math.random() * this._height);
 				x = Math.floor(Math.random() * this._width);
 			}
@@ -70,9 +65,6 @@ export class MineField {
 				}
 			}
 		}
-		if (callback) {
-			callback();
-		}
 	}
 
 	get table(): FieldCell[][] {
@@ -84,7 +76,7 @@ export class MineField {
 	}
 
 	get height(): number {
-		return this._width;
+		return this._height;
 	}
 }
 
@@ -93,8 +85,6 @@ export class FieldCell {
 	private _number: number;
 	private _flag: Boolean;
 	private _revealed: Boolean;
-
-	private _onReveal: any;
 
 	constructor(type: CellType, number?: number) {
 		this._type = type;
@@ -107,19 +97,13 @@ export class FieldCell {
 		return this._number;
 	}
 
-	set onReveal(func: any) {
-		this._onReveal = func;
-	}
 
 	reveal(y?: number, x?: number): void {
-		if (this._type !== CellType.DUMMY) {
+		if (!this.isDummy) {
 			this._revealed = true;
 			if (this._flag) {
 				this._flag = false;
 			}
-		}
-		if (this._onReveal) {
-			this._onReveal(y, x);
 		}
 	}
 
@@ -137,6 +121,10 @@ export class FieldCell {
 
 	get hasMine(): Boolean {
 		return this._revealed && this._type === CellType.MINE;
+	}
+
+	get isDummy(): Boolean {
+		return this._type === CellType.DUMMY;
 	}
 
 	get type(): CellType {
