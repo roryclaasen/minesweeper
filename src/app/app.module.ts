@@ -17,12 +17,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { AppComponent } from './app.component';
 import { GameComponent } from './game/game.component';
 import { GameOptionsComponent } from './game/options.component';
+import { ScoreComponent } from './game/interface/score.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		GameComponent,
-		GameOptionsComponent
+		GameOptionsComponent,
+		ScoreComponent
 	],
 	imports: [
 		BrowserModule,

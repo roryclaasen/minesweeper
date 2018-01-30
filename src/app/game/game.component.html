@@ -1,15 +1,25 @@
 <app-game-options [gameModes]="gameModes"></app-game-options>
 
-<mat-card>
-	<button mat-raised-button color="primary" (click)="newGame()">New Game</button>
-	<button mat-raised-button color="accent" (click)="revealAll()">Reveal All</button>
-</mat-card>
+<mat-toolbar>
+	<mat-toolbar-row>
+		<app-game-score [value]="score" [btnClass]="died ? 'mat-warn' : ''"></app-game-score>
+
+		<span class="spacer"></span>
+
+		<button mat-raised-button color="primary" (click)="newGame()" style="margin-right: 5px;">New Game</button>
+		<button mat-raised-button color="accent" (click)="revealAll()">Reveal All</button>
+
+		<span class="spacer"></span>
+
+		<app-game-score [value]="timer" [btnClass]="gameover ? 'mat-warn' : ''"></app-game-score>
+	</mat-toolbar-row>
+</mat-toolbar>
 
 <mat-card>
 	<table class="mineField noselect" [ngClass]="[gameover ? 'gameover':'']">
 		<tbody>
 			<tr *ngFor="let row of mineField.table; let y = index">
-				<td *ngFor="let cell of row; let x = index" (click)="click($event)" (contextmenu)="rightClick($event)" [attr.y]="y" [attr.x]="x" [ngClass]="[cell.revealed ? 'revealed':'', cell.hasMine ? 'mine':'']">
+				<td *ngFor="let cell of row; let x = index" (click)="click($event)" (contextmenu)="rightClick($event)" [attr.y]="y" [attr.x]="x" [ngClass]="[cell.revealed ? 'revealed':'', cell.hasMine && cell.used ? 'mine':'']">
 					<div class="content">
 						<i *ngIf="cell.hasFlag" class="fa fa-flag"></i>
 						<i *ngIf="cell.hasMine" class="fa fa-bomb"></i>

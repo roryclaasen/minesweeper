@@ -17,9 +17,9 @@ var win = null;
 
 function createWindow() {
 	win = new BrowserWindow({ width: 1000, height: 650 });
-
+	win.setMenu(null);
+	win.setMinimumSize(750, 500);
 	if (!serve) {
-		win.setMenu(null);
 		win.loadURL(url.format({
 			pathname: path.join(__dirname, 'dist', 'index.html'),
 			protocol: 'file:',
@@ -34,7 +34,6 @@ function createWindow() {
 		win = null;
 	});
 }
-
 
 try {
 	app.on('ready', createWindow);

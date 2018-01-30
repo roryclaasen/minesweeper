@@ -4,7 +4,14 @@
 	box-shadow: $params;
 }
 
-mat-card {
+mat-toolbar {
+	background-color: white;
+	.spacer {
+		flex: 1 1 auto;
+	}
+}
+
+mat-card, mat-toolbar {
 	margin: 20px 0;
 }
 

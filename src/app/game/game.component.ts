@@ -1,8 +1,12 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { MineField, CellType } from './grid';
 
 import { GameModeManager } from './gameModes';
+
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/interval'; import 'rxjs/add/operator/takeWhile';
 
 @Component({
 	selector: 'app-game',
@@ -14,13 +18,20 @@ export class GameComponent implements OnInit {
 	private mineField: MineField;
 
 	private died: Boolean = false;
+	private running: Boolean = false;
 	private currentGameOptions: any;
+
+	private _time: number;
 
 	gameModes: GameModeManager;
 
 	ngOnInit(): void {
 		this.gameModes = new GameModeManager();
 		this.newGame();
+
+		Observable.interval(1000).takeWhile(() => this.running && !this.gameover).subscribe(i => {
+			this._time += 1;
+		});
 	}
 
 	gameOptionsChanged(options: any): void {
@@ -34,6 +45,8 @@ export class GameComponent implements OnInit {
 		const mines = this.gameModes.currentMode.mines;
 
 		this.mineField = new MineField(width, height, mines);
+		this._time = 0;
+		this.running = false;
 	}
 
 	rightClick(event: any): void {
@@ -50,51 +63,38 @@ export class GameComponent implements OnInit {
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
 			if (this.mineField.table[y][x].isDummy) {
+				this.running = true;
 				this.mineField.generate(y, x);
 			}
 			if (this.mineField.table[y][x].hasFlag) {
 				this.mineField.table[y][x].toggleFlag();
 			} else {
-				this.mineField.table[y][x].reveal(y, x);
+				this.mineField.table[y][x].click();
 				if (this.mineField.table[y][x].type === CellType.NONE) {
-					this.revealEmpty(y, x);
+					this.mineField.revealEmpty(y, x);
 				}
 				if (this.mineField.table[y][x].hasMine) {
-					// this.died = true;
+					this.mineField.revealMines();
+					this.died = true;
 				}
 			}
 		}
 	}
 
 	revealAll(): void {
-		for (let y = 0; y < this.mineField.height; y++) {
-			for (let x = 0; x < this.mineField.width; x++) {
-				this.mineField.table[y][x].reveal(y, x);
-			}
-		}
-	}
-
-	private revealEmpty(startY: number, startX: number) {
-		for (let yI = -1; yI <= 1; yI++) {
-			const y = startY + yI;
-			if (y < 0 || y >= this.mineField.height) { continue; }
-			for (let xI = -1; xI <= 1; xI++) {
-				if ((yI === -1 || yI === 1) && (xI === -1 || xI === 1)) { continue; }
-				const x = startX + xI;
-				if (x < 0 || x >= this.mineField.width) { continue; }
-				if (y === startY && x === startX) { continue; }
-				if (!this.mineField.table[y][x].revealed) {
-					this.mineField.table[y][x].reveal();
-					if (this.mineField.table[y][x].type === CellType.NONE) {
-						this.revealEmpty(y, x);
-					}
-				}
-			}
-		}
+		this.mineField.revealAll();
 	}
 
 	get gameover(): Boolean {
 		return this.died;
+	}
+
+	get score(): number {
+		return this.mineField.mines - this.mineField.flags;
+	}
+
+	get timer(): number {
+		return this._time;
 	}
 
 	convertNumber(value: number): String {
