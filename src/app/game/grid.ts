@@ -47,7 +47,7 @@ export class MineField {
 					if (y + yI < 0 || y + yI >= this._height) { continue; }
 					for (let xI = -1; xI <= 1; xI++) {
 						if (x + xI < 0 || x + xI >= this._width) { continue; }
-						if (yI === y && xI === x) {
+						if (y + yI === y && x + xI === x) {
 							continue;
 						}
 						const cell = this._table[y + yI][x + xI];
@@ -136,12 +136,29 @@ export class MineField {
 		}
 		return count;
 	}
+
+	get movesLeft(): number {
+		let count = 0;
+		for (let y = 0; y < this._height; y++) {
+			for (let x = 0; x < this._width; x++) {
+				if (this._table[y][x].revealed) {
+					continue;
+				}
+				if (this._table[y][x].isMine && this._table[y][x].hasFlag) {
+					continue;
+				}
+				count++;
+			}
+		}
+		return count;
+	}
 }
 
 export class FieldCell {
 	private _type: CellType;
 	private _number: number;
 	private _flag: Boolean;
+	private _question: Boolean;
 	private _revealed: Boolean;
 	private _used: Boolean;
 
@@ -149,6 +166,7 @@ export class FieldCell {
 		this._type = type;
 		this._number = number;
 		this._flag = false;
+		this._question = false;
 		this._revealed = false;
 		this._used = false;
 	}
@@ -165,9 +183,8 @@ export class FieldCell {
 	reveal(): void {
 		if (!this.isDummy) {
 			this._revealed = true;
-			if (this._flag) {
-				this._flag = false;
-			}
+			// this._flag = false;
+			this._question = false;
 		}
 	}
 
@@ -180,11 +197,27 @@ export class FieldCell {
 	}
 
 	toggleFlag(): void {
-		this._flag = !this._flag;
+		if (this._question) {
+			this._question = false;
+			return;
+		}
+		if (this._flag) {
+			this._flag = false;
+			this._question = true;
+			return;
+		}
+		if (!this._question && !this._flag) {
+			this._flag = true;
+			return;
+		}
 	}
 
 	get hasFlag(): Boolean {
 		return this._flag;
+	}
+
+	get hasQuestion(): Boolean {
+		return this._question;
 	}
 
 	get hasMine(): Boolean {

@@ -21,7 +21,8 @@
 			<tr *ngFor="let row of mineField.table; let y = index">
 				<td *ngFor="let cell of row; let x = index" (click)="click($event)" (contextmenu)="rightClick($event)" [attr.y]="y" [attr.x]="x" [ngClass]="[cell.revealed ? 'revealed':'', cell.hasMine && cell.used ? 'mine':'']">
 					<div class="content">
-						<i *ngIf="cell.hasFlag" class="fa fa-flag"></i>
+						<i *ngIf="showFlag(cell.hasFlag, cell.hasMine)" class="fa fa-flag"></i>
+						<i *ngIf="cell.hasQuestion" class="fa fa-question"></i>
 						<i *ngIf="cell.hasMine" class="fa fa-bomb"></i>
 						<span *ngIf="cell.number && cell.revealed" class="number" [ngClass]="convertNumber(cell.number)">{{ cell.number }}</span>
 					</div>
