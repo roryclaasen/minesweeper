@@ -15,9 +15,9 @@ import 'rxjs/add/observable/interval'; import 'rxjs/add/operator/takeWhile';
 })
 export class GameComponent implements OnInit {
 
-	private mineField: MineField;
+	private _mineField: MineField;
 
-	private died: Boolean = false;
+	private _died: Boolean = false;
 	private won: Boolean = false;
 	private running: Boolean = false;
 	private currentGameOptions: any;
@@ -37,12 +37,12 @@ export class GameComponent implements OnInit {
 	}
 
 	newGame(): void {
-		this.died = this.won = false;
+		this._died = this.won = false;
 		const width = this.gameModes.currentMode.width;
 		const height = this.gameModes.currentMode.height;
 		const mines = this.gameModes.currentMode.mines;
 
-		this.mineField = new MineField(width, height, mines);
+		this._mineField = new MineField(width, height, mines);
 		this._time = this._minesLft = 0;
 		this.running = false;
 	}
@@ -51,8 +51,8 @@ export class GameComponent implements OnInit {
 		event.preventDefault();
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
-			if (!this.mineField.table[y][x].revealed && !this.mineField.table[y][x].isDummy) {
-				this.mineField.table[y][x].toggleFlag();
+			if (!this._mineField.table[y][x].revealed && !this._mineField.table[y][x].isDummy) {
+				this._mineField.table[y][x].toggleFlag();
 			}
 			this.checkHasEnded();
 		}
@@ -62,23 +62,23 @@ export class GameComponent implements OnInit {
 		this.running = true;
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
-			if (this.mineField.table[y][x].isDummy) {
+			if (this._mineField.table[y][x].isDummy) {
 				Observable.interval(1000).takeWhile(() => this.doTick).subscribe(i => {
 					this._time += 1;
 				});
-				this.mineField.generate(y, x);
+				this._mineField.generate(y, x);
 			}
-			if (this.mineField.table[y][x].hasFlag || this.mineField.table[y][x].hasQuestion) {
-				this.mineField.table[y][x].toggleFlag();
+			if (this._mineField.table[y][x].hasFlag || this._mineField.table[y][x].hasQuestion) {
+				this._mineField.table[y][x].toggleFlag();
 			} else {
-				this.mineField.table[y][x].click();
-				if (this.mineField.table[y][x].type === CellType.NONE) {
-					this.mineField.revealEmpty(y, x);
+				this._mineField.table[y][x].click();
+				if (this._mineField.table[y][x].type === CellType.NONE) {
+					this._mineField.revealEmpty(y, x);
 				}
-				if (this.mineField.table[y][x].hasMine) {
+				if (this._mineField.table[y][x].hasMine) {
 					this._minesLft = this.score;
-					this.mineField.revealMines();
-					this.died = true;
+					this._mineField.revealMines();
+					this._died = true;
 				}
 			}
 			this.checkHasEnded();
@@ -93,25 +93,33 @@ export class GameComponent implements OnInit {
 	}
 
 	revealAll(): void {
-		this.mineField.revealAll();
+		this._mineField.revealAll();
 	}
 
 	checkHasEnded(): Boolean {
-		if (this.mineField.movesLeft === 0) {
+		if (this._mineField.movesLeft === 0) {
 			this.won = true;
 		}
 		return this.won;
 	}
 
+	get mineField(): MineField {
+		return this._mineField;
+	}
+
 	get gameover(): Boolean {
-		return this.died || this.won;
+		return this._died || this.won;
+	}
+
+	get died(): Boolean {
+		return this._died;
 	}
 
 	get score(): number {
-		if (this.died) {
+		if (this._died) {
 			return this._minesLft;
 		}
-		return this.mineField.mines - this.mineField.flags;
+		return this._mineField.mines - this._mineField.flags;
 	}
 
 	get timer(): number {

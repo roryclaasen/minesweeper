@@ -1,74 +1,70 @@
 {
-  "name": "minesweeper",
-  "version": "0.0.0",
-  "author": "Rory Claasen (http://roryclaasen.me)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/roryclaasen/AngularTicTacToe/issues"
-  },
-  "homepage": "https://github.com/roryclaasen/AngularTicTacToe#readme",
-  "scripts": {
-    "ng": "ng",
-    "start": "npm-run-all --parallel ng:serve electron:serve",
-    "ng:build": "ng build --prod",
-    "ng:lint": "ng lint",
-    "ng:serve": "ng serve",
-    "electron:serve": "electron . --serve"
-  },
-  "main": "main.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/roryclaasen/AngularTicTacToe.git"
-  },
-  "engines": {
-    "node": "^6.11.3",
-    "npm": "^3.10.10"
-  },
-  "private": true,
-  "dependencies": {
-    "@angular/animations": "^5.2.1",
-    "@angular/cdk": "^5.1.0",
-    "@angular/common": "^5.1.0",
-    "@angular/compiler": "^5.1.0",
-    "@angular/core": "^5.1.0",
-    "@angular/forms": "^5.1.0",
-    "@angular/http": "^5.1.0",
-    "@angular/material": "^5.1.0",
-    "@angular/platform-browser": "^5.1.0",
-    "@angular/platform-browser-dynamic": "^5.1.0",
-    "@angular/router": "^5.1.0",
-    "core-js": "^2.4.1",
-    "dotenv": "^4.0.0",
-    "font-awesome": "^4.7.0",
-    "ngx-electron": "^1.0.4",
-    "normalize.css": "^7.0.0",
-    "rxjs": "^5.5.6",
-    "zone.js": "^0.8.19"
-  },
-  "devDependencies": {
-    "@angular-devkit/core": "0.0.28",
-    "@angular/cli": "1.6.4",
-    "@angular/compiler-cli": "^5.1.0",
-    "@angular/language-service": "^5.1.0",
-    "@types/jasmine": "~2.8.3",
-    "@types/jasminewd2": "~2.0.2",
-    "@types/node": "~6.0.60",
-    "codelyzer": "^4.0.1",
-    "electron": "^1.7.10",
-    "electron-packager": "^10.1.1",
-    "electron-prebuilt": "^1.4.13",
-    "electron-reload": "^1.2.2",
-    "jasmine-core": "~2.8.0",
-    "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~2.0.0",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-cli": "~1.0.1",
-    "karma-coverage-istanbul-reporter": "^1.2.1",
-    "karma-jasmine": "~1.1.0",
-    "karma-jasmine-html-reporter": "^0.2.2",
-    "npm-run-all": "^4.1.2",
-    "ts-node": "~3.2.0",
-    "tslint": "~5.9.1",
-    "typescript": "~2.5.3"
-  }
+	"name": "minesweeper",
+	"version": "0.1.0",
+	"author": "Rory Claasen",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/roryclaasen/minesweeper/issues"
+	},
+	"homepage": "https://github.com/roryclaasen/minesweeper#readme",
+	"scripts": {
+		"ng": "ng",
+		"start": "npm-run-all --parallel ng:serve electron:serve",
+		"ng:build": "ng build --prod",
+		"ng:lint": "ng lint",
+		"ng:serve": "ng serve",
+		"electron:serve": "electron . --serve",
+		"electron:pack": "electron-builder --dir",
+		"electron:dist": "electron-builder"
+	},
+	"main": "main.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/roryclaasen/minesweeper.git"
+	},
+	"engines": {
+		"node": "^6.11.3",
+		"npm": "^3.10.10"
+	},
+	"build": {
+		"appId": "me.roryclaasen.minesweeper"
+	},
+	"private": true,
+	"dependencies": {
+		"@angular/animations": "^5.2.1",
+		"@angular/cdk": "^5.1.0",
+		"@angular/common": "^5.1.0",
+		"@angular/compiler": "^5.1.0",
+		"@angular/core": "^5.1.0",
+		"@angular/forms": "^5.1.0",
+		"@angular/http": "^5.1.0",
+		"@angular/material": "^5.1.0",
+		"@angular/platform-browser": "^5.1.0",
+		"@angular/platform-browser-dynamic": "^5.1.0",
+		"@angular/router": "^5.1.0",
+		"core-js": "^2.4.1",
+		"dotenv": "^4.0.0",
+		"font-awesome": "^4.7.0",
+		"ngx-electron": "^1.0.4",
+		"normalize.css": "^7.0.0",
+		"rxjs": "^5.5.6",
+		"zone.js": "^0.8.19"
+	},
+	"devDependencies": {
+		"@angular-devkit/core": "0.0.28",
+		"@angular/cli": "1.6.4",
+		"@angular/compiler-cli": "^5.1.0",
+		"@angular/language-service": "^5.1.0",
+		"@types/node": "~6.0.60",
+		"codelyzer": "^4.0.1",
+		"electron": "^1.7.10",
+		"electron-builder": "^20.38.2",
+		"electron-packager": "^10.1.1",
+		"electron-prebuilt": "^1.4.13",
+		"electron-reload": "^1.2.2",
+		"npm-run-all": "^4.1.2",
+		"ts-node": "~3.2.0",
+		"tslint": "~5.9.1",
+		"typescript": "~2.5.3"
+	}
 }
