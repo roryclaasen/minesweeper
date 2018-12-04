@@ -20,11 +20,7 @@ function createWindow() {
 	win.setMenu(null);
 	win.setMinimumSize(750, 500);
 	if (!serve) {
-		win.loadURL(url.format({
-			pathname: path.join(__dirname, 'build', 'index.html'),
-			protocol: 'file:',
-			slashes: true
-		}));
+		win.loadURL('file://' + path.join(__dirname, 'build', 'index.html'));
 	} else {
 		win.loadURL('http://localhost:4200');
 		win.webContents.openDevTools();
@@ -45,6 +41,6 @@ try {
 	app.on('activate', function () {
 		if (win === null) createWindow();
 	});
-} catch (e) { 
+} catch (e) {
 	throw e;
 }

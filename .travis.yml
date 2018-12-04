@@ -7,11 +7,24 @@ cache:
 script:
   - npm run ng:lint
   - npm run ng:build
+  - npm run electron:build:win
+  - npm run electron:build:linux
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  local-dir: build
-  committer-from-gh: true
-  on:
-    branch: master
+  -  provider: pages
+     skip-cleanup: true
+     github-token: $GITHUB_TOKEN
+     local-dir: build
+     committer-from-gh: true
+     on:
+       branch: master
+  -  provider: releases
+     skip-cleanup: true
+     api_key: $GITHUB_TOKEN
+     file_glob: true
+     file:
+      - "dist/*.exe"
+      - "dist/*.dmg"
+      - "dist/*.deb"
+      - "dist/*.appimage"
+     on:
+       tags: true
