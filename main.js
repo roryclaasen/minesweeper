@@ -21,7 +21,7 @@ function createWindow() {
 	win.setMinimumSize(750, 500);
 	if (!serve) {
 		win.loadURL(url.format({
-			pathname: path.join(__dirname, 'dist', 'index.html'),
+			pathname: path.join(__dirname, 'build', 'index.html'),
 			protocol: 'file:',
 			slashes: true
 		}));

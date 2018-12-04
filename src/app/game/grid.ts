@@ -1,3 +1,90 @@
+export enum CellType {
+	NONE, NUMBER, MINE, DUMMY
+}
+
+export class FieldCell {
+	private _type: CellType;
+	private _number: number;
+	private _flag: Boolean;
+	private _question: Boolean;
+	private _revealed: Boolean;
+	private _used: Boolean;
+
+	constructor(type: CellType, number?: number) {
+		this._type = type;
+		this._number = number;
+		this._flag = false;
+		this._question = false;
+		this._revealed = false;
+		this._used = false;
+	}
+
+	get number(): number {
+		return this._number;
+	}
+
+	click(): void {
+		this._used = true;
+		this.reveal();
+	}
+
+	reveal(): void {
+		if (!this.isDummy) {
+			this._revealed = true;
+			// this._flag = false;
+			this._question = false;
+		}
+	}
+
+	get revealed(): Boolean {
+		return this._revealed;
+	}
+
+	get used(): Boolean {
+		return this._used;
+	}
+
+	toggleFlag(): void {
+		if (this._question) {
+			this._question = false;
+			return;
+		}
+		if (this._flag) {
+			this._flag = false;
+			this._question = true;
+			return;
+		}
+		if (!this._question && !this._flag) {
+			this._flag = true;
+			return;
+		}
+	}
+
+	get hasFlag(): Boolean {
+		return this._flag;
+	}
+
+	get hasQuestion(): Boolean {
+		return this._question;
+	}
+
+	get hasMine(): Boolean {
+		return this._revealed && this._type === CellType.MINE;
+	}
+
+	get isMine(): Boolean {
+		return this._type === CellType.MINE;
+	}
+
+	get isDummy(): Boolean {
+		return this._type === CellType.DUMMY;
+	}
+
+	get type(): CellType {
+		return this._type;
+	}
+}
+
 export class MineField {
 	private _width: number;
 	private _height: number;
@@ -154,89 +241,3 @@ export class MineField {
 	}
 }
 
-export class FieldCell {
-	private _type: CellType;
-	private _number: number;
-	private _flag: Boolean;
-	private _question: Boolean;
-	private _revealed: Boolean;
-	private _used: Boolean;
-
-	constructor(type: CellType, number?: number) {
-		this._type = type;
-		this._number = number;
-		this._flag = false;
-		this._question = false;
-		this._revealed = false;
-		this._used = false;
-	}
-
-	get number(): number {
-		return this._number;
-	}
-
-	click(): void {
-		this._used = true;
-		this.reveal();
-	}
-
-	reveal(): void {
-		if (!this.isDummy) {
-			this._revealed = true;
-			// this._flag = false;
-			this._question = false;
-		}
-	}
-
-	get revealed(): Boolean {
-		return this._revealed;
-	}
-
-	get used(): Boolean {
-		return this._used;
-	}
-
-	toggleFlag(): void {
-		if (this._question) {
-			this._question = false;
-			return;
-		}
-		if (this._flag) {
-			this._flag = false;
-			this._question = true;
-			return;
-		}
-		if (!this._question && !this._flag) {
-			this._flag = true;
-			return;
-		}
-	}
-
-	get hasFlag(): Boolean {
-		return this._flag;
-	}
-
-	get hasQuestion(): Boolean {
-		return this._question;
-	}
-
-	get hasMine(): Boolean {
-		return this._revealed && this._type === CellType.MINE;
-	}
-
-	get isMine(): Boolean {
-		return this._type === CellType.MINE;
-	}
-
-	get isDummy(): Boolean {
-		return this._type === CellType.DUMMY;
-	}
-
-	get type(): CellType {
-		return this._type;
-	}
-}
-
-export enum CellType {
-	NONE, NUMBER, MINE, DUMMY
-}

@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "node"
+cache:
+  directories:
+    - "node_modules"
+script:
+  - npm run ng:lint
+  - npm run ng:build
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  local-dir: build
+  committer-from-gh: true
+  on:
+    branch: master

@@ -4,9 +4,7 @@ import { MineField, CellType } from './grid';
 
 import { GameModeManager } from './gameModes';
 
-
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/interval'; import 'rxjs/add/operator/takeWhile';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-game',
@@ -26,6 +24,8 @@ export class GameComponent implements OnInit {
 	private _minesLft: number;
 
 	gameModes: GameModeManager;
+
+	private timerInterval: Subscription;
 
 	ngOnInit(): void {
 		this.gameModes = new GameModeManager();
@@ -63,8 +63,10 @@ export class GameComponent implements OnInit {
 		if (!this.gameover) {
 			const y: number = parseInt(event.target.attributes.y.value, 10), x: number = parseInt(event.target.attributes.x.value, 10);
 			if (this._mineField.table[y][x].isDummy) {
-				Observable.interval(1000).takeWhile(() => this.doTick).subscribe(i => {
-					this._time += 1;
+				this.timerInterval = interval(1000).subscribe(i => {
+					if (!this.gameover) {
+						this._time += 1;
+					}
 				});
 				this._mineField.generate(y, x);
 			}
@@ -79,6 +81,7 @@ export class GameComponent implements OnInit {
 					this._minesLft = this.score;
 					this._mineField.revealMines();
 					this._died = true;
+					this.timerInterval.unsubscribe();
 				}
 			}
 			this.checkHasEnded();
@@ -94,6 +97,7 @@ export class GameComponent implements OnInit {
 
 	revealAll(): void {
 		this._mineField.revealAll();
+		this.timerInterval.unsubscribe();
 	}
 
 	checkHasEnded(): Boolean {
