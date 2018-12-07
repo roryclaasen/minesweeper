@@ -19,7 +19,8 @@
 		"electron:build": "npm-run-all electron:build:win electron:build:mac electron:build:linux",
 		"electron:build:win": "electron-builder --win",
 		"electron:build:mac": "electron-builder --mac",
-		"electron:build:linux": "electron-builder --linux"
+		"electron:build:linux": "electron-builder --linux",
+		"release": "yarn compile && electron-builder"
 	},
 	"main": "main.js",
 	"repository": {
@@ -38,6 +39,9 @@
 		],
 		"mac": {
 			"category": "public.app-category.games"
+		},
+		"linux": {
+		  "category": "Games"
 		}
 	},
 	"private": true,
